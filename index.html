@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="is">
-
+  
 <head>
   <link rel="icon"
     href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛒</text></svg>" />
@@ -66,41 +66,27 @@
         <p class="empty-message">Ekkert í körfu.</p>
         <div class="cart-content hidden">eitthvað í körfu.</div>
       </div>
-
       <table class="table">
         <thead>
           <tr>
-            <th>Heiti</th>
-            <th>Fjöldi</th>
-            <th>Verð</th>
-            <th>Samtals</th>
-            <th>Eyða</th>
           </tr>
         </thead>
         <tbody>
-          <tr data-cart-product-id="1">
-            <td class="title">HTML húfa</td>
-            <td class="quantity">1</td>
-            <td class="price"><span class="price">5.000 kr.-</span></td>
-            <td class="total"><span class="price">5.000 kr.-</span></td>
-            <td>
-              <form class="remove" method="post">
-                <button>Eyða</button>
-              </form>
-            </td>
-          </tr>
         </tbody>
         <tfoot>
-          <tr>
+          <tr> 
+            <td>Heiti</td>
+            <td>Lýsing</td>
+            <td>Verð</td>
+            <td>Samtals</td>
+          </tr>
+            </thead>
             <td colspan="3">Samtals</td>
-            <td><span class="price">5.000 kr.-</span></td>
-            <td></td>
+            <td><span class="cart-total">0 kr.-</span></td>
           </tr>
         </tfoot>
       </table>
-
       </div>
-
       <form method="post">
         <div class="form-field">
           <label for="name">Nafn:</label>

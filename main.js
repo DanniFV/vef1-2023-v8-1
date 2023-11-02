@@ -1,4 +1,5 @@
 import { createCartLine, showCartContent } from './lib/ui.js';
+import { formatNumber } from './lib/helpers.js';
 
 const products = [
   {
@@ -22,9 +23,9 @@ const products = [
   },
 ];
 
-/** Bæta vöru í körfu */
+const addToCartForms = document.querySelectorAll('.add');
+
 function addProductToCart(product, quantity) {
-  // Hér þarf að finna `<tbody>` í töflu og setja `cartLine` inn í það
   const cart = document.querySelector('.cart-content');
 
   if (!cart) {
@@ -32,44 +33,75 @@ function addProductToCart(product, quantity) {
     return;
   }
   
-  // TODO hér þarf að athuga hvort lína fyrir vöruna sé þegar til
-  const cartLine = createCartLine(product, quantity);
-  cart.appendChild(cartLine);
+const cartLine = cart.querySelector(`[data-cart-product-id="${product.id}"]`);
+if (cartLine) {
+    let quantityElement = cartLine.querySelector('td:nth-child(2)');
+    let totalPriceElement = cartLine.querySelector('td:nth-child(4) .price');
+    if (quantityElement && totalPriceElement) {
+      let newQuantity = parseInt(quantityElement.textContent || '0') + quantity;
+      quantityElement.textContent = newQuantity.toString();
+      totalPriceElement.textContent = formatNumber(product.price * newQuantity);
+    }
+  } else {
+    cart.appendChild(createCartLine(product, quantity));
+  }
 
-  // Sýna efni körfu
   showCartContent(true);
-
-  // TODO sýna/uppfæra samtölu körfu
+  updateCartTotal();
 }
 
 function submitHandler(event) {
-  // Komum í veg fyrir að form submiti
   event.preventDefault();
-  
-  // Finnum næsta element sem er `<tr>`
   const parent = event.target.closest('tr')
-
-  // Það er með attribute sem tiltekur auðkenni vöru, t.d. `data-product-id="1"`
   const productId = Number.parseInt(parent.dataset.productId);
-
-  // Finnum vöru með þessu productId
   const product = products.find((i) => i.id === productId);
 
-  // TODO hér þarf að finna fjölda sem á að bæta við körfu með því að athuga
-  // á input
-  const quantity = 1;
+  const input = parent.querySelector('input[type="number"]');
+  const quantity = input ? parseInt(input.value) : 1;
 
-  // Bætum vöru í körfu (hér væri gott að bæta við athugun á því að varan sé til)
-  addProductToCart(product, quantity);
+  if (product) {
+    addProductToCart(product, quantity);
+  } else {
+  console.warn('vara ekki fundin');
+  }
 }
 
-// Finna öll form með class="add"
-const addToCartForms = document.querySelectorAll('.add')
-
-// Ítra í gegnum þau sem fylki (`querySelectorAll` skilar NodeList)
-for (const form of Array.from(addToCartForms)) {
-  // Bæta submit event listener við hvert
+addToCartForms.forEach(form => {
   form.addEventListener('submit', submitHandler);
+});
+
+function updateCartTotal(){
+  const cartLines = document.querySelectorAll('.cart-content tr');
+  let total = 0;
+
+  cartLines.forEach((line) => {
+
+    if (line instanceof HTMLElement) {
+    const productId = parseInt(line.dataset.cartProductId || '0');
+    const product = products.find((p) => p.id === productId);
+    
+    if (product) {
+      const quantityElement = line.querySelector('td:nth-child(2)');
+      const quantityText = quantityElement ? quantityElement.textContent : '0';
+      const quantity = parseInt(quantityText, 10);
+      total += product.price * quantity;
+    }
+  }
+  });
+
+  const totalElement = document.querySelector('.cart-total');
+  if (totalElement) {
+    totalElement.textContent = formatNumber(total);
+  }
+
+  document.querySelector('form').addEventListener('submit', function(event) {
+    event.preventDefault();
+    // Your code to handle the form data and show the receipt
+  });
+  
 }
 
-// TODO bæta við event handler á form sem submittar pöntun
+
+
+// TODO: Add the event handler for submitting the order here if required
+// You will need to provide the implementation based on your specific UI and requirements
