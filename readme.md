@@ -100,3 +100,4 @@ Sett verða fyrir tvö hópverkefni þar sem hvort um sig gildir 10%, samtals 20
 > Útgáfa 0.1
 # vefforritun-2023-dfv-v8
 # vefforritun-2023-dfv-v8
+# vefforritun-2023-dfv-v8
